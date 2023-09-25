@@ -164,6 +164,33 @@ chartOption3: EChartsOption = {
         focus: 'series'
       },
       data: [131, 109, 187, 165, 287, 120, 231]
+      },
+      {
+        name: 'BLU',
+        type: 'line',
+        stack: 'Total',  //mette dati uno sopra l'altro per somma di dati (es, vendite di tipi di prodotti sommate)
+        smooth: true,   // se curvo o spezzettato
+        lineStyle: {    // spessore linea di confine
+          width: 3,
+        },
+        showSymbol: false, //se mostrare tondini dove ci sono i valori, sempre o no
+        areaStyle: {
+          opacity: 0.7,   //valori da 0 a 1, se zero è trasparente, 1 è pieno
+          /*color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [   //da sfumature
+          {
+            offset: 0,
+            color: 'rgb(128, 255, 165)'
+          },
+          {
+            offset: 1,
+            color: 'rgb(1, 191, 236)'
+          }
+        ])*/
+      },
+      emphasis: {   //lascia solo questa serie e rende il resto invisibile
+        focus: 'self'
+      },
+      data: [131, 116, 121, 0, 30, 10, 0]
       }
     ]
   };
