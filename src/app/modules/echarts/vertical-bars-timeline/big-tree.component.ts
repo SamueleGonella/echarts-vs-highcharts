@@ -15,7 +15,7 @@ import { seriesType } from "highcharts";
 export class BigTreeChart {
 
   echartsInstance1: any;
-  dataSeriesAttivaF3 = [9000, 10000, 8000, 11000, 10000, 7000, 16000, 13000, 11000, 10000, 10000, 14000];
+  dataSeriesAttivaF3 = [9000, 10000, 8000, 14000, 10000, 1000, 16000, 13000, 11000, 10000, 10000, 14000];
   dataSeriesAttivaF2 = [6000, 10000, 10000, 12000, 10000, 15000, 14000, 13000, 11000, 10000, 9000, 14000];
   dataSeriesAttivaF1 = [8000, 10000, 11000, 9000, 10000, 8000, 14000, 13000, 11000, 10000, 13000, 14000];
   dataSeriesAttivaMono = [10000, 10000, 7000, 10000, 12000, 15000, 14000, 13000, 11000, 10000, 10000, 14000];
@@ -25,6 +25,7 @@ export class BigTreeChart {
       + this.dataSeriesAttivaF3[i] 
       + this.dataSeriesAttivaMono[i]
   );
+
 
   onChartInit(ec: any) {
     this.echartsInstance1 = ec;
@@ -38,7 +39,7 @@ export class BigTreeChart {
 
 
   chartOption1: EChartsOption = {
-    color: [ '#803010', '#cc6600', '#ff8c1a', '#ffb366', '#ffffff'],
+    color: [ '#803010', '#cc6600', '#ff8c1a', '#ffb366', '#000000'],
     title: {
       text: 'ENERGIA ATTIVA'
     },
@@ -149,53 +150,43 @@ export class BigTreeChart {
             return value + ' kWh';
           },
         },
-        barWidth: 40
-      },
-      {
-        name: 'Attività Totale',
-        type: 'bar',
-        stack: 'Total',
-             //mette dati uno sopra l'altro per somma di dati (es, vendite di tipi di prodotti sommate)
-           //data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] // senza non lo mostra, è lo spazio bianco per il totale
-
-        // tooltip: {
-        //     valueFormatter: function (value: number, dataTotalActivity: number[]) {  
-        //       value = tooltipTotal(value, dataTotalActivity);
-        //       return value + ' kWh';
-        //   },
-        // },
-        tooltip: {
-          valueFormatter: function (params) {  
-            console.log(params);
-            var index = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.11,0.12,0.13].indexOf(params as number);
-            var value2 = new BigTreeChart().dataTotalActivity[index]; 
-            var res: string = value2 + ' kWh';
-            return res;
-          },
-        },
+        barWidth: 40,
         label: {
           show:true,
           formatter: (params) => { 
-            var index: number = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.11,0.12,0.13].indexOf(params.value as number);
-            var value2 = this.dataTotalActivity[index]/1000; 
-            return value2.toString() + 'k kWh';
+            var res = params.value as number;
+            params.value = this.dataTotalActivity[
+                        this.dataSeriesAttivaMono.indexOf(res)]/1000;
+            return params.value + 'k kWh';
           },
           fontFamily: 'monospace',
           fontWeight: "bolder",
           fontSize: 15,
-          color: '#595959'
+          color: '#595959',
+          opacity: 1,
         },
         labelLayout: {
-          dy: -15
+          dy: -60
         }
-      }
+      },
+      {
+        name: 'Attività Totale',
+        type: 'bar',
+        data: this.dataTotalActivity,
+        itemStyle: {
+          opacity: 0
+        },
+        tooltip: {
+          valueFormatter: function (params) {  
+            return params.toString() + ' kWh';
+          },
+        },
+      },
     ],
   }
+
+   
 }
-
-
-
-
 
 
 
