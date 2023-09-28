@@ -6,13 +6,18 @@ import { IInformations } from './informations';
 import { EChartsOption, LabelFormatterCallback } from 'echarts';
 import { TooltipOptions, seriesType } from 'highcharts';
 import { __param } from 'tslib';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'big-tree-comp',
   templateUrl: './big-tree.component.html',
-  styleUrls: ['./big-tree.component.css'],
+  styleUrls: ['./big-tree.component.css']
 })
 export class BigTreeChart {
+
+  numberedArray: number[] = new Array(12).fill(0).map((m,i) => m = m + i);
+  dataEvent: boolean[] = [];
+  dataDisplay: string[] = [];
 
   echartsInstance1: any;
   dataXaxis = new Array(12).fill(0).map((m, i) => {
@@ -48,6 +53,7 @@ export class BigTreeChart {
         this.dataSeriesAttivaF3[i] +
         this.dataSeriesAttivaMono[i]
     );
+  dataSecondChartkw = [58, 41, 70, 99, 46 , 34, 56, 64, 29, 90, 75, 101];
 
   onChartInit(ec: any) {
     this.echartsInstance1 = ec;
@@ -63,8 +69,8 @@ export class BigTreeChart {
     }
   }
 
-  formatLabelData(data: Array<string>) {
-    return function (params: any): string {
+  formatLabelData = (data: Array<string>) => {
+    return (params: any) => {
       const date = new Date();
       //params.value è quello ceh scriverebbe di base nella label, ossia stessa cosa
       // scritta nel data
@@ -78,10 +84,11 @@ export class BigTreeChart {
       const res = data.indexOf(params.value as string);
       const correctDate = new Date(
         date.setMonth(date.getMonth() + res)
-      ).toLocaleString('it', {
-        month: 'long',
-        year: 'numeric',
-      });
+          ).toLocaleString('it', {
+            month: 'long',
+            year: 'numeric',
+          });
+      this.EventBinding(params.value);
       return correctDate[0].toLocaleUpperCase() + correctDate.slice(1);
     };
   }
@@ -243,19 +250,27 @@ export class BigTreeChart {
           opacity: 1,
         },
         labelLayout: {
-          dy: -30,
+          dy: -28,
           rotate: 90,
           dx: -45,
         },
       },
+      {
+
+      }
     ],
   };
 
 
 
-
-
-
+  EventBinding(date : any) {
+    this.dataEvent.fill(false);
+    this.dataDisplay.fill(' ');
+    console.log('Iniziali: ' + date);
+    this.dataEvent[this.dataXaxis.indexOf(date)] = true;
+    this.dataDisplay.map((m, i) => m = this.dataSecondChartkw + ' kW');
+    console.log('SIUUUUUUUUUUUUUUUUUUUUUU: ' + this.dataEvent[0]);
+  }
 
   chartOption2: EChartsOption = {
     tooltip: {
@@ -321,7 +336,7 @@ export class BigTreeChart {
     series: [
       {
         name: 'Picco di Potenza',
-        data: [58, 41, 70, 99, 46 , 34, 56, 64, 29, 90, 75, 101],
+        data: this.dataSecondChartkw,
         type: 'line',
         lineStyle: {
           opacity: 0,
@@ -341,5 +356,5 @@ export class BigTreeChart {
   };
 
 
-
 }
+
