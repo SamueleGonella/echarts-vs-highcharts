@@ -1,24 +1,30 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnChanges,
+  SimpleChange,
+  EventEmitter,
+  ElementRef,
+  AfterViewInit,
+  ViewChild,
+} from '@angular/core';
 import * as echarts from 'echarts';
 import { Observable, findIndex } from 'rxjs';
 import { IInformations } from './informations';
 import { EChartsOption, LabelFormatterCallback } from 'echarts';
-import { TooltipOptions, seriesType } from 'highcharts';
+import { Chart, TooltipOptions, seriesType } from 'highcharts';
 import { __param } from 'tslib';
-import { NgIf } from '@angular/common';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'big-tree-comp',
   templateUrl: './big-tree.component.html',
-  styleUrls: ['./big-tree.component.css']
+  styleUrls: ['./big-tree.component.css'],
 })
-export class BigTreeChart {
-
-  numberedArray: number[] = new Array(12).fill(0).map((m,i) => m = m + i);
+export class BigTreeChart implements AfterViewInit {
+  numberedArray: number[] = new Array(12).fill(0).map((m, i) => (m = m + i));
   dataEvent: boolean[] = [];
-  dataDisplay: string[] = [];
-
   echartsInstance1: any;
   dataXaxis = new Array(12).fill(0).map((m, i) => {
     const date = new Date();
@@ -53,7 +59,15 @@ export class BigTreeChart {
         this.dataSeriesAttivaF3[i] +
         this.dataSeriesAttivaMono[i]
     );
-  dataSecondChartkw = [58, 41, 70, 99, 46 , 34, 56, 64, 29, 90, 75, 101];
+  dataSecondChartkw = [58, 41, 70, 99, 46, 34, 56, 64, 29, 90, 75, 101];
+  dataDisplay: string;
+
+  constructor() {
+    this.dataDisplay = '';
+  }
+  ngAfterViewInit(): void {
+    // this.chart2.nativeElement.dispatchEvent(new Event('mouseover', {}));
+  }
 
   onChartInit(ec: any) {
     this.echartsInstance1 = ec;
@@ -84,15 +98,14 @@ export class BigTreeChart {
       const res = data.indexOf(params.value as string);
       const correctDate = new Date(
         date.setMonth(date.getMonth() + res)
-          ).toLocaleString('it', {
-            month: 'long',
-            year: 'numeric',
-          });
+      ).toLocaleString('it', {
+        month: 'long',
+        year: 'numeric',
+      });
       this.EventBinding(params.value);
       return correctDate[0].toLocaleUpperCase() + correctDate.slice(1);
     };
-  }
-
+  };
 
   chartOption1: EChartsOption = {
     color: ['#b05030', '#cc6600', '#ff8c1a', '#ffb366', '#000000'],
@@ -113,12 +126,12 @@ export class BigTreeChart {
       },
       textStyle: {
         fontWeight: 'normal',
-        color: 'black'
-      }
+        color: 'black',
+      },
     },
     grid: {
       show: true,
-      height: 350
+      height: 350,
     },
     xAxis: {
       type: 'category',
@@ -134,8 +147,8 @@ export class BigTreeChart {
       splitLine: {
         show: true,
         lineStyle: {
-            color: 'lightgrey',
-            type: 'solid'
+          color: 'lightgrey',
+          type: 'solid',
         },
       },
     },
@@ -163,7 +176,6 @@ export class BigTreeChart {
           if (value2 != 0) return value2 / 1000 + 'k';
           else return value2 + ' ';
         },
-
       },
     },
     legend: {
@@ -183,7 +195,6 @@ export class BigTreeChart {
           valueFormatter: function (value) {
             return value + ' kWh';
           },
-
         },
         barWidth: 35,
       },
@@ -255,21 +266,21 @@ export class BigTreeChart {
           dx: -45,
         },
       },
-      {
-
-      }
     ],
   };
 
-
-
-  EventBinding(date : any) {
+  EventBinding(date: any) {
     this.dataEvent.fill(false);
-    this.dataDisplay.fill(' ');
+    //this.dataDisplay.fill(' ');
     console.log('Iniziali: ' + date);
-    this.dataEvent[this.dataXaxis.indexOf(date)] = true;
-    this.dataDisplay.map((m, i) => m = this.dataSecondChartkw + ' kW');
-    console.log('SIUUUUUUUUUUUUUUUUUUUUUU: ' + this.dataEvent[0]);
+    const index = this.dataXaxis.indexOf(date);
+    this.dataEvent[index] = true;
+    this.dataDisplay = this.dataSecondChartkw[index].toString() + ' kW';
+    console.log(' ');
+    console.log('Data Event: ' + this.dataEvent);
+    console.log(' ');
+    console.log('Data Display: ' + this.dataDisplay);
+    console.log(' ');
   }
 
   chartOption2: EChartsOption = {
@@ -280,7 +291,7 @@ export class BigTreeChart {
         label: {
           backgroundColor: '#6a7985', //NON LO SO
           distance: 2,
-          formatter: this.formatLabelData(this.dataXaxis)
+          formatter: this.formatLabelData(this.dataXaxis),
         },
       },
       textStyle: {
@@ -302,8 +313,8 @@ export class BigTreeChart {
       splitLine: {
         show: true,
         lineStyle: {
-            color: 'lightgrey',
-            type: 'solid'
+          color: 'lightgrey',
+          type: 'solid',
         },
       },
     },
@@ -325,12 +336,12 @@ export class BigTreeChart {
         lineStyle: {
           color: '#737373',
         },
-      }
+      },
     },
     grid: {
       height: 80,
       show: true,
-      containLabel: true
+      containLabel: true,
     },
 
     series: [
@@ -349,12 +360,13 @@ export class BigTreeChart {
         tooltip: {
           valueFormatter: function (value) {
             return value + ' kW';
-          }
-        }
+          },
+        },
       },
     ],
   };
 
-
+  mouseOver(e: any) {
+    console.log('e: ' + e);
+  }
 }
-

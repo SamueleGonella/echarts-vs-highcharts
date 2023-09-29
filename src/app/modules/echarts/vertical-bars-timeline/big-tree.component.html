@@ -1,14 +1,23 @@
 <div class="div-gigante">
-  <div echarts [options]='chartOption1' class="demo-chart"></div>
+  <div
+    echarts
+    [options]="chartOption1"
+    class="demo-chart"
+    (chartMouseOver)="mouseOver($event)"
+  ></div>
 </div>
 
 <div class="div-chart2second">
-  <div echarts [options]='chartOption2' class="demo-chart"></div>
+  <div echarts [options]="chartOption2" class="demo-chart2"></div>
 </div>
 
-<div id="div-inside-for-EventBinding" >
-  <a>TEST</a>
-  <div *ngFor='let i in numberedArray'>
+<div id="div-inside-for-EventBinding">
+  <!-- <div *ngFor='let i in numberedArray'>
     <div *ngIf='dataEvent[i]'>Res: {{dataDisplay[i]}}</div>
+  </div> -->
+  <div>
+    <div *ngFor="let i of dataEvent">
+      <p *ngIf="i">{{ dataDisplay }}</p>
+    </div>
   </div>
 </div>
